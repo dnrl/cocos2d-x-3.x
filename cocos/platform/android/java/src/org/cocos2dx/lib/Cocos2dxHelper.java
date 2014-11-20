@@ -416,4 +416,17 @@ public class Cocos2dxHelper {
 
         public void runOnGLThread(final Runnable pRunnable);
     }
+    
+    // Vibrate
+    public static void vibrate(long time) {
+        Cocos2dxHelper.sCocos2dSound.vibrate(time);
+    }
+    
+    public static void vibrateWithPattern(long pattern[], int repeat) {
+        Cocos2dxHelper.sCocos2dSound.vibrateWithPattern(pattern, repeat);
+    }
+    
+    public static void cancelVibrate() {
+        Cocos2dxHelper.sCocos2dSound.cancelVibrate();
+    }
 }
