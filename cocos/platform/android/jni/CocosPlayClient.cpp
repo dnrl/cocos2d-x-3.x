@@ -32,13 +32,9 @@ using namespace cocos2d;
 
 #define LOG_TAG    "CocosPlayClient.cpp"
 #if COCOS2D_DEBUG
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-#define LOGW(...)  __android_log_print(ANDROID_LOG_WARN,LOG_TAG,__VA_ARGS__)
-#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+#define LOGD(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 #else
 #define LOGD(...)
-#define LOGW(...)
-#define LOGE(...)
 #endif
 
 static std::string __gameRootPath;
@@ -98,7 +94,7 @@ static bool getEnv(JNIEnv **env)
         bRet = true;
         break;
     default:
-        LOGE("%s", "Failed to get the environment using GetEnv()");
+        LOGD("%s", "Failed to get the environment using GetEnv()");
         break;
     }
 
@@ -119,7 +115,7 @@ static void initClassLoaderForMultiThread()
         {
             env->ExceptionDescribe();
             env->ExceptionClear();
-            LOGW("Exception initClassLoaderForMultiThread cocos2dClass is exception");
+            LOGD("Exception initClassLoaderForMultiThread cocos2dClass is exception");
             break;
         }
 
@@ -128,7 +124,7 @@ static void initClassLoaderForMultiThread()
         {
             env->ExceptionDescribe();
             env->ExceptionClear();
-            LOGW("Exception initClassLoaderForMultiThread classClass is exception");
+            LOGD("Exception initClassLoaderForMultiThread classClass is exception");
             break;
         }
 
@@ -137,7 +133,7 @@ static void initClassLoaderForMultiThread()
         {
             env->ExceptionDescribe();
             env->ExceptionClear();
-            LOGW("Exception initClassLoaderForMultiThread classLoaderClass");
+            LOGD("Exception initClassLoaderForMultiThread classLoaderClass");
             break;
         }
 
@@ -147,7 +143,7 @@ static void initClassLoaderForMultiThread()
         {
             env->ExceptionDescribe();
             env->ExceptionClear();
-            LOGW("Exception initClassLoaderForMultiThread classLoader");
+            LOGD("Exception initClassLoaderForMultiThread classLoader");
             break;
         }
         __classLoader = env->NewGlobalRef(classLoader);
@@ -160,7 +156,7 @@ static void initClassLoaderForMultiThread()
             env->ExceptionClear();
             __findClassMethod = NULL;
             __classLoader = NULL;
-            LOGW("Exception initClassLoaderForMultiThread findClassMethod");
+            LOGD("Exception initClassLoaderForMultiThread findClassMethod");
             break;
         }
     }while(0);
@@ -193,7 +189,7 @@ static jclass getClassID_(const char *className, JNIEnv *env)
                 if(ret) break;
             }
 
-            LOGE("Failed to find class of %s", className);
+            LOGD("Failed to find class of %s", className);
             break;
         }
     } while (0);
@@ -220,7 +216,7 @@ static bool getStaticMethodInfo(cocos2d::JniMethodInfo &methodinfo, const char *
         methodID = pEnv->GetStaticMethodID(classID, methodName, paramCode);
         if (! methodID)
         {
-            LOGW("Failed to find static method id of %s", methodName);
+            LOGD("Failed to find static method id of %s", methodName);
             break;
         }
 
@@ -261,10 +257,7 @@ void lazyInit()
         LOGD("isNotifyFileLoadedEnabled = %d", __isNotifyFileLoadedEnabled);
     }
 
-    if (__isCocosPlayEnabled)
-    {
-        initClassLoaderForMultiThread();
-    }
+    initClassLoaderForMultiThread();
 
     __isCocosPlayInited = true;
 }
@@ -285,8 +278,13 @@ void updateAssets(const std::string& filePath)
     {
         lazyInit();
     }
+    if (!__isCocosPlayEnabled)
+    {
+        LOGD("ERROR: CocosPlayClient isn't enabled!");
+        return;
+    }
 
-    if (!__isCocosPlayEnabled || __isDemo)
+    if (__isDemo)
     {
         return;
     }
@@ -362,7 +360,7 @@ std::string getGameRoot()
 {
     if (!__isCocosPlayEnabled)
     {
-        LOGW("CocosPlayClient isn't enabled!");
+        LOGD("ERROR: CocosPlayClient isn't enabled!");
         return "";
     }
 

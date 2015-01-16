@@ -227,6 +227,23 @@ public:
     @param pszFilePath        The path of the effect file
     */
     virtual void unloadEffect(const char* pszFilePath);
+    
+    /**
+     @brief vibrate
+     @param time        vibrate time
+     */
+    virtual void vibrate(long long time);
+    
+    /**
+     @brief vibrate pattern
+     @param pattern[] (time) repeat
+     */
+    virtual void vibrateWithPattern(long long pattern[], int repeat);
+    
+    /**
+     @brief vibrate cancle
+     */
+    virtual void cancelVibrate();
 };
 
 } // end of namespace CocosDenshion

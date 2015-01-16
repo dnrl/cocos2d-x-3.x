@@ -289,5 +289,26 @@ void SimpleAudioEngine::stopAllEffects()
 {
     static_stopAllEffects();
 }
+    
+void SimpleAudioEngine::vibrate(long long time)
+{
+#if !TARGET_IPHONE_SIMULATOR
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+#endif
+}
+
+void SimpleAudioEngine::vibrateWithPattern(long long pattern[], int repeat)
+{
+#if !TARGET_IPHONE_SIMULATOR
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+#endif
+}
+
+void SimpleAudioEngine::cancelVibrate()
+{
+#if !TARGET_IPHONE_SIMULATOR
+    AudioServicesRemoveSystemSoundCompletion(kSystemSoundID_Vibrate);
+#endif
+}
 
 } // endof namespace CocosDenshion {
